@@ -1,6 +1,7 @@
 package com.mao.engage;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -50,7 +51,12 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context, "Coming soon", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(context, TeacherClassActivity.class);
+                    intent.putExtra("sectionRefKey", section.getRef_key());
+                    Log.d("TEST-MAGIC", " " + section.getMagic_key());
+                    intent.putExtra("magic_word", " " + section.getMagic_key());
+                    intent.putExtra("section_name", section.getSection_id());
+                    context.startActivity(intent);
                 }
             });
         }

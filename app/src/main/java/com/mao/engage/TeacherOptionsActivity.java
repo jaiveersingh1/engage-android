@@ -19,6 +19,7 @@ public class TeacherOptionsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teacher_options);
+        FirebaseUtils.populateSectionsOwnedByTeacher();
 
         name = getIntent().getStringExtra("name");
         createButton = findViewById(R.id.createNewBtn);

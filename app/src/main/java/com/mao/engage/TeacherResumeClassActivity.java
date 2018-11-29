@@ -4,6 +4,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -21,8 +24,6 @@ public class TeacherResumeClassActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerView);
 
-
-
         ArrayList<SectionSesh> dummySections = new ArrayList<>();
         SectionSesh dummySectionSesh = new SectionSesh("10-27-2018-01:09PM", "10-27-2018-02:09PM", "ffffffff-c819-e197-ffff-ffffef05ac4a", "Michelle's Section", "-LSO8fBtXE-iC9A_ccLw", 990, new ArrayList<java.lang.String>());
         SectionSesh dummySectionSesh2 = new SectionSesh("10-27-2018-01:09PM", "10-27-2018-02:09PM", "ffffffff-c819-e197-ffff-ffffef05ac4a", "Another Section", "-LSO8fBtX E-iC9A_ccLw", 890, new ArrayList<java.lang.String>());
@@ -32,8 +33,10 @@ public class TeacherResumeClassActivity extends AppCompatActivity {
         dummySections.add(dummySectionSesh2);
         dummySections.add(dummySectionSesh3);
 
+        Log.d("BOB READ ARRAY", "onCreate: " + FirebaseUtils.sectionsOwnedByMe.toString());
+
         layoutManager = new LinearLayoutManager(this);
-        adapter = new SectionAdapter(this, dummySections);
+        adapter = new SectionAdapter(this, FirebaseUtils.sectionsOwnedByMe);
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);

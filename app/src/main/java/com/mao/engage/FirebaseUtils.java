@@ -14,6 +14,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -36,6 +37,7 @@ public class FirebaseUtils {
     //Local variables as copy of Database
     static HashMap<String, String> allUsers = new HashMap<>(); // K: user_id (device key); V: section_ref_key
     static HashSet<String> allTeachers = new HashSet<>(); // device keys (DB reference key)
+    static ArrayList<SectionSesh> sectionsOwnedByMe = new ArrayList<>(); // device keys (DB reference key)
     static HashMap<String, Integer> sectionSliders = new HashMap<>(); // K: user_id; v: slider;
 
     // Add a section child in SectionSesh
@@ -243,6 +245,49 @@ public class FirebaseUtils {
         Log.d("TEST", "teacherIsInDB RESULT: " + allTeachers.contains(getPsuedoUniqueID()));
 
         return allTeachers.contains(getPsuedoUniqueID());
+    }
+
+    public static void populateSectionsOwnedByTeacher() {
+        DatabaseReference mRef =  FirebaseDatabase.getInstance().getReference("/Teachers/" + getPsuedoUniqueID() + "/existingSections");
+        mRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                String id = dataSnapshot.getKey();
+                Log.d("TEST", "[new Section owned by teacher] \n" + id);
+                FirebaseDatabase.getInstance().getReference("/Sections/" + id).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        Log.d("BOB Data", "onDataChange: " + dataSnapshot.getValue(SectionSesh.class).section_id);
+                        sectionsOwnedByMe.add(dataSnapshot.getValue(SectionSesh.class));
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     /**
